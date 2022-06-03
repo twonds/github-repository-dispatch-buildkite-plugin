@@ -6,8 +6,6 @@ requirements:
   - jq
 configuration:
   properties:
-    token:
-      type: string
     repository:
       type: string
     event_type:

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+
+# shellcheck source=lib/config.bash
+. "$DIR/../lib/config.bash"
+# shellcheck source=lib/git.bash
+. "$DIR/../lib/git.bash"
+# shellcheck source=lib/metadata.bash
+. "$DIR/../lib/metadata.bash"
+
+echo "+++ :github: Repository Dispatch "
+
+if [[ -z "${GITHUB_TOKEN:-}" ]]; then
+  echo 'Error: GITHUB_TOKEN environment variable not set'
+  echo 'A Github personal access token with repo permissions is needed to open pull requests'
+  exit 1
+fi
+
+repository=$(plugin_read_config RESPOSITORY '')
+event_type=$(plugin_read_config EVENT_TYPE '')
+client_payload=$(plugin_read_config CLIENT_PAYLOAD '')
+
+repository_dispatch "${repository}" "${event_type}" "${client_payload}"
