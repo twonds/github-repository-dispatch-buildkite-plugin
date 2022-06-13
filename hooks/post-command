@@ -6,8 +6,8 @@ DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 # shellcheck source=lib/config.bash
 . "$DIR/../lib/config.bash"
-# shellcheck source=lib/git.bash
-. "$DIR/../lib/git.bash"
+# shellcheck source=lib/github.bash
+. "$DIR/../lib/github.bash"
 # shellcheck source=lib/metadata.bash
 . "$DIR/../lib/metadata.bash"
 
