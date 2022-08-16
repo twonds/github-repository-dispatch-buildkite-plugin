@@ -15,6 +15,32 @@ steps:
           event_type: <the_event_type_for_workflow>
 ```
 
+## Configuration
+
+### `repository` (Required, string)
+
+The repository path to use
+
+### `event_type` (Required, string)
+
+The event type of the workflow to indicate what workflow event to trigger.
+
+## Developing
+
+To run the tests:
+
+```shell
+docker-compose run --rm tests
+```
+
+## Contributing
+
+1. Fork the repo
+2. Make the changes
+3. Run the tests
+4. Commit and push your changes
+5. Send a pull request
+
 ## TODO
 
 [ ] Trigger Github workflow
