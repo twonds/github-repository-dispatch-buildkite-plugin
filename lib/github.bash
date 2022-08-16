@@ -12,7 +12,7 @@ function repository_dispatch() {
                  --arg EVENT_TYPE "${event_type}" \
                  --arg CLIENT_PAYLOAD "${client_payload}" \
                  '{ event_type: $EVENT_TYPE, client_payload: $CLIENT_PAYLOAD }')
-    url="$(base_url "repos/${repo}")/dispatches"
+    url="$(base_url "repos/${repository}")/dispatches"
     github_post request_dispatch "${url}" "${payload}"
 }
 
