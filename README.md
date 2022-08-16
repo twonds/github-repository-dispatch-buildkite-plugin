@@ -8,9 +8,12 @@ A [Buildkite plugin](https://buildkite.com/docs/agent/v3/plugins) that lets you 
 
 ```yml
 steps:
-  - label: ":github: Trigger github workflow"
+  - command: ls
+    env:
+      BUILDKITE_PLUGINS_ALWAYS_CLONE_FRESH: "true"
+    label: ":github: Trigger github workflow"
     plugins:
-      - twonds/github-repository-dispatch#main:
+      - twonds/github-repository-dispatch#v0.1.0:
         repository: <your_path_to_repo>
         event_type: <the_event_type_for_workflow>
 ```
