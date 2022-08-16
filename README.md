@@ -10,9 +10,9 @@ A [Buildkite plugin](https://buildkite.com/docs/agent/v3/plugins) that lets you 
 steps:
   - label: ":github: Trigger github workflow"
     plugins:
-      - twonds/github-repository-dispatch#v0.1.0:
-          repository: <your_path_to_repo>
-          event_type: <the_event_type_for_workflow>
+      - twonds/github-repository-dispatch#main:
+        repository: <your_path_to_repo>
+        event_type: <the_event_type_for_workflow>
 ```
 
 ## Configuration
