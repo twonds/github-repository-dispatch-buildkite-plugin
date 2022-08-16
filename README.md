@@ -2,7 +2,6 @@
 
 A [Buildkite plugin](https://buildkite.com/docs/agent/v3/plugins) that lets you trigger a Github workflow via a repository dispatch.
 
-
 ## Example
 
 
@@ -16,3 +15,9 @@ steps:
           event_type: <the_event_type_for_workflow>
 ```
 
+## TODO
+
+[ ] Trigger Github workflow
+[ ] Wait for workflow to complete
+[ ] Wait on certain workflow status
+[ ] Report on Github workflow URL and status
