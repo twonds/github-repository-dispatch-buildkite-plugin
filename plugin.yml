@@ -1,4 +1,4 @@
-name: Github Respository Dispatch
+name: Github Repository Dispatch
 description: A Buildkite plugin that triggers a Github workflow
 author: https://github.com/twonds
 requirements:
@@ -13,5 +13,5 @@ configuration:
     client_payload:
       type: object
   required:
-    - respository
+    - repository
     - event_type
