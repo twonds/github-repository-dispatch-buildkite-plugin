@@ -19,8 +19,8 @@ if [[ -z "${GITHUB_TOKEN:-}" ]]; then
   exit 1
 fi
 
-repository=$(plugin_read_config RESPOSITORY '')
+repository=$(plugin_read_config REPOSITORY '')
 event_type=$(plugin_read_config EVENT_TYPE '')
-client_payload=$(plugin_read_config CLIENT_PAYLOAD '')
+client_payload=$(plugin_read_config CLIENT_PAYLOAD '{}')
 
 repository_dispatch "${repository}" "${event_type}" "${client_payload}"

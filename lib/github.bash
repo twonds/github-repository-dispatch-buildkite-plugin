@@ -10,7 +10,7 @@ function repository_dispatch() {
     payload=$(jq -n \
                  --compact-output \
                  --arg EVENT_TYPE "${event_type}" \
-                 --arg CLIENT_PAYLOAD "${client_payload}" \
+                 --argjson CLIENT_PAYLOAD "${client_payload}" \
                  '{ event_type: $EVENT_TYPE, client_payload: $CLIENT_PAYLOAD }')
     url="$(base_url "repos/${repository}")/dispatches"
     github_post request_dispatch "${url}" "${payload}"
@@ -32,9 +32,9 @@ function github_post() {
   local response_file="${temp_dir}/${name}_response.json"
   local http_code
 
-  mkdir -p "${temp_dir}"
+  mkdir -p "${temp_dir}" || true
   echo "${payload}" > "${request_file}"
-
+  echo "${url}"
   http_code="$(curl --silent \
                     --write-out '%{http_code}'\
                     --data "${payload}" \
