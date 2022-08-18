@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load "/usr/local/bin/bats/load.bash"
+load "/usr/local/lib/bats/load.bash"
 
 # Uncomment the following to get more detail on failures of stubs
 # export CURL_STUB_DEBUG=/dev/tty
