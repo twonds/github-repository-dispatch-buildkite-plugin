@@ -11,7 +11,7 @@ load "/usr/local/lib/bats/load.bash"
 
   stub buildkite-agent
 
-  run "$PWD/hooks/post-command"
+  run "$PWD/hooks/command"
 
   assert_failure
 
