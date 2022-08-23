@@ -24,7 +24,7 @@ event_type=$(plugin_read_config EVENT_TYPE '')
 wait_for_job_name=$(plugin_read_config WAIT_FOR_JOB_NAME '')
 client_payload=$(plugin_read_config CLIENT_PAYLOAD '{}')
 wait_count=$(plugin_read_config WAIT_COUNT 60)
-wait_time=$(plugin_read_config WAIT_TIME 10)
+wait_time=$(plugin_read_config WAIT_TIME 20)
 
 repository_dispatch "${repository}" "${event_type}" "${client_payload}"
 echo "Repository dispatched ${repository} ${event_type} ${wait_for_job_name}"
