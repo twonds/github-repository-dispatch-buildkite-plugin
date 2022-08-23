@@ -12,6 +12,8 @@ configuration:
       type: string
     client_payload:
       type: object
+    wait_for_job_name:
+      type: string
   required:
     - repository
     - event_type

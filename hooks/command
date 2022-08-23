@@ -5,11 +5,11 @@ set -eu -o pipefail
 DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 # shellcheck source=lib/config.bash
-. "$DIR/../lib/config.bash"
+. "${DIR}/../lib/config.bash"
 # shellcheck source=lib/github.bash
-. "$DIR/../lib/github.bash"
+. "${DIR}/../lib/github.bash"
 # shellcheck source=lib/metadata.bash
-. "$DIR/../lib/metadata.bash"
+. "${DIR}/../lib/metadata.bash"
 
 echo "+++ :github: Repository Dispatch "
 
@@ -21,6 +21,55 @@ fi
 
 repository=$(plugin_read_config REPOSITORY '')
 event_type=$(plugin_read_config EVENT_TYPE '')
+wait_for_job_name=$(plugin_read_config WAIT_FOR_JOB_NAME '')
 client_payload=$(plugin_read_config CLIENT_PAYLOAD '{}')
 
 repository_dispatch "${repository}" "${event_type}" "${client_payload}"
+
+if [[ "${wait_for_job_name}" == "" ]];then
+    exit 0
+fi
+
+request_file="${api_calls_dir}/request_dispatch_request.json"
+uuid=$(jq -r .client_payload.unique_identifier "${request_file}")
+
+max_checks=6
+workflow_run=""
+
+for i in `seq 1 ${max_checks}`
+do
+    echo "Check ${i}"
+    get_repository_dispatch "${repository}" "${event_type}"
+
+    echo "${uuid}"
+    response_file="${api_calls_dir}/get_actions_run_response.json"
+    # workflow_runs=$(jq .workflow_runs ${response_file})
+    job_urls=($(jq '.workflow_runs[]| select(.event=="repository_dispatch")| .jobs_url' -r "${response_file}"| xargs))
+    for job_url in "${job_urls[@]}"
+    do
+        if [ "${job_url}" != "" ];then
+            # echo "${job_url}"
+            github_get get_job_url "${job_url}"
+            html_url=$(jq --arg uuid "${uuid}" -r -c '.jobs| map(select(any(.steps[]; .name == $uuid)))[0].html_url' "${api_calls_dir}/get_job_url_response.json")
+            if [ "${html_url}" != "null" ]
+            then
+                status=$(jq --arg jobs_url "${job_url}" '.workflow_runs[]| select(.jobs_url == $jobs_url )| .status' -r "${response_file}")
+                conclusion=$(jq --arg jobs_url "${job_url}" '.workflow_runs[]| select(.jobs_url == $jobs_url )| .conclusion' -r "${response_file}")
+                echo "View workflow that has a status of ${status} and conclusion of ${conclusion}: ${html_url}"
+                # Check for status and conclusion
+                if [ "${status}" == "completed" ]
+                then
+                    if [ "${conclusion}" == "success" ]
+                    then
+                        exit
+                    fi
+                    exit 1
+                fi
+                break
+            fi
+        fi
+    done
+    sleep 10
+done
+
+exit 1
