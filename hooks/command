@@ -57,7 +57,7 @@ do
                 conclusion=$(jq --arg jobs_url "${job_url}" '.workflow_runs[]| select(.jobs_url == $jobs_url )| .conclusion' -r "${response_file}")
                 echo "View workflow that has a status of ${status} and conclusion of ${conclusion}: ${html_url}"
                 # Check for status and conclusion
-                if [ "${status}" == "completed" ]
+                if [ "${status}" == "completed" ] && [ "${conclusion}" != "null" ]
                 then
                     if [ "${conclusion}" == "success" ]
                     then
