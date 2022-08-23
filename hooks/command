@@ -25,7 +25,7 @@ wait_for_job_name=$(plugin_read_config WAIT_FOR_JOB_NAME '')
 client_payload=$(plugin_read_config CLIENT_PAYLOAD '{}')
 
 repository_dispatch "${repository}" "${event_type}" "${client_payload}"
-
+echo "Repository dispatched ${repository} ${event_type} ${wait_for_job_name}"
 if [[ "${wait_for_job_name}" == "" ]];then
     exit 0
 fi
