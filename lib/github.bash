@@ -42,7 +42,7 @@ function base_url() {
 function github_get() {
     local name=$1
     local url=$2
-    echo "GET: ${url}"
+
     local response_file="${api_calls_dir}/${name}_response.json"
     local http_code
     http_code="$(curl --silent \
@@ -68,7 +68,7 @@ function github_post() {
 
   mkdir -p "${api_calls_dir}" || true
   echo "${payload}" > "${request_file}"
-  echo "POST: ${url}"
+
   http_code="$(curl --silent \
                     --write-out '%{http_code}'\
                     --data "${payload}" \
