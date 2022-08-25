@@ -13,7 +13,7 @@ steps:
       BUILDKITE_PLUGINS_ALWAYS_CLONE_FRESH: "true"
     label: ":github: Trigger github workflow"
     plugins:
-      - twonds/github-repository-dispatch#v0.5.0:
+      - twonds/github-repository-dispatch#v0.7.1:
           repository: '<your_path_to_repo>'
           event_type: '<the_event_type_for_workflow>'
 ```
