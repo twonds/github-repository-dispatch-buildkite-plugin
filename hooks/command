@@ -46,6 +46,10 @@ do
     response_file="${api_calls_dir}/get_actions_run_response.json"
     # workflow_runs=$(jq .workflow_runs ${response_file})
     job_urls=($(jq '.workflow_runs[]| select(.event=="repository_dispatch")| .jobs_url' -r "${response_file}"| xargs))
+    if [ "${job_urls+empty}" == "empty" ]
+    then
+        break
+    fi
     for job_url in "${job_urls[@]}"
     do
         if [ "${job_url}" != "" ];then
