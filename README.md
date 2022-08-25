@@ -46,7 +46,9 @@ docker-compose run --rm tests
 
 ## TODO
 
-[ ] Trigger Github workflow
-[ ] Wait for workflow to complete
-[ ] Wait on certain workflow status
-[ ] Report on Github workflow URL and status
+- [x] Trigger Github workflow
+- [x] Wait for workflow to complete
+- [x] Report on Github workflow URL and status
+- [ ] Wait on certain workflow status
+- [ ] Complete test coverage
+- [ ] Complete documentation
