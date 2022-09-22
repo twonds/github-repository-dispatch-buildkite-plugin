@@ -45,7 +45,7 @@ do
     set +x
     job_urls=($(jq '.workflow_runs[]| select(.event=="repository_dispatch")| .jobs_url' -r "${response_file}"| xargs))
     set -x
-    if [ "${job_urls+empty}" != "empty" ]
+    if [ "${job_urls:-empty}" != "empty" ]
     then
         echo "Found job url for dispatched workflow, waiting on conclusion"
         for job_url in "${job_urls[@]}"
