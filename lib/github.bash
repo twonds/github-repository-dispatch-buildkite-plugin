@@ -26,7 +26,9 @@ function get_repository_dispatch() {
     local event_type=$2
     #local date_filter=$(date +"%Y-%m-%dT%H:%M")
     #local url=$(base_url "repos/${repository}/actions/runs?created=%3E${date_filter}")
-    local url=$(base_url "repos/${repository}/actions/runs?per_page=5")
+    local url=""
+
+    url=$(base_url "repos/${repository}/actions/runs?per_page=5")
 
     github_get get_actions_run "${url}"
 
