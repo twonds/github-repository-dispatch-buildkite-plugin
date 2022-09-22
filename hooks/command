@@ -39,21 +39,23 @@ workflow_run=""
 
 for i in `seq 1 ${wait_count}`
 do
-    echo "Check ${i}"
+    echo "Get dispatch call ${repository} ${event_type} ${i}"
     get_repository_dispatch "${repository}" "${event_type}"
 
-    echo "${uuid}"
+    echo "Using ${uuid} to find dispatched workflow..."
     response_file="${api_calls_dir}/get_actions_run_response.json"
     # workflow_runs=$(jq .workflow_runs ${response_file})
     job_urls=($(jq '.workflow_runs[]| select(.event=="repository_dispatch")| .jobs_url' -r "${response_file}"| xargs))
     if [ "${job_urls+empty}" == "empty" ]
     then
+        echo "Did not find jobs, trying again."
         break
     fi
+    echo "Found job url for dispatched workflow, waiting on conclusion"
     for job_url in "${job_urls[@]}"
     do
         if [ "${job_url}" != "" ];then
-            # echo "${job_url}"
+            echo "${job_url}"
             github_get get_job_url "${job_url}"
             html_url=$(jq --arg uuid "${uuid}" -r -c '.jobs| map(select(any(.steps[]; .name == $uuid)))[0].html_url' "${api_calls_dir}/get_job_url_response.json")
             if [ "${html_url}" != "null" ]
@@ -77,4 +79,5 @@ do
     sleep "${wait_time}"
 done
 
+echo "Failed to find or follow dispatched workflow"
 exit 1
