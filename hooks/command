@@ -43,36 +43,36 @@ do
     echo "Using ${uuid} to find dispatched workflow..."
     response_file="${api_calls_dir}/get_actions_run_response.json"
     read -r -d '' -a job_urls < <(jq '.workflow_runs[]| select(.event=="repository_dispatch")| .jobs_url' -r "${response_file}"| xargs)
-    if [ "${job_urls+empty}" == "empty" ]
+    if [ "${job_urls+empty}" != "empty" ]
     then
-        echo "Did not find jobs, trying again."
-        break
-    fi
-    echo "Found job url for dispatched workflow, waiting on conclusion"
-    for job_url in "${job_urls[@]}"
-    do
-        if [ "${job_url}" != "" ];then
-            echo "${job_url}"
-            github_get get_job_url "${job_url}"
-            html_url=$(jq --arg uuid "${uuid}" -r -c '.jobs| map(select(any(.steps[]; .name == $uuid)))[0].html_url' "${api_calls_dir}/get_job_url_response.json")
-            if [ "${html_url}" != "null" ]
-            then
-                status=$(jq --arg jobs_url "${job_url}" '.workflow_runs[]| select(.jobs_url == $jobs_url )| .status' -r "${response_file}")
-                conclusion=$(jq --arg jobs_url "${job_url}" '.workflow_runs[]| select(.jobs_url == $jobs_url )| .conclusion' -r "${response_file}")
-                echo "View workflow that has a status of ${status} and conclusion of ${conclusion}: ${html_url}"
-                # Check for status and conclusion
-                if [ "${status}" == "completed" ] && [ "${conclusion}" != "null" ]
+        echo "Found job url for dispatched workflow, waiting on conclusion"
+        for job_url in "${job_urls[@]}"
+        do
+            if [ "${job_url}" != "" ];then
+                echo "${job_url}"
+                github_get get_job_url "${job_url}"
+                html_url=$(jq --arg uuid "${uuid}" -r -c '.jobs| map(select(any(.steps[]; .name == $uuid)))[0].html_url' "${api_calls_dir}/get_job_url_response.json")
+                if [ "${html_url}" != "null" ]
                 then
-                    if [ "${conclusion}" == "success" ]
+                    status=$(jq --arg jobs_url "${job_url}" '.workflow_runs[]| select(.jobs_url == $jobs_url )| .status' -r "${response_file}")
+                    conclusion=$(jq --arg jobs_url "${job_url}" '.workflow_runs[]| select(.jobs_url == $jobs_url )| .conclusion' -r "${response_file}")
+                    echo "View workflow that has a status of ${status} and conclusion of ${conclusion}: ${html_url}"
+                    # Check for status and conclusion
+                    if [ "${status}" == "completed" ] && [ "${conclusion}" != "null" ]
                     then
-                        exit
+                        if [ "${conclusion}" == "success" ]
+                        then
+                            exit
+                        fi
+                        exit 1
                     fi
-                    exit 1
+                    break
                 fi
-                break
             fi
-        fi
-    done
+        done
+    else
+        echo "Did not find jobs, trying again."
+    fi
     sleep "${wait_time}"
 done
 
