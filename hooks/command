@@ -42,7 +42,7 @@ do
 
     echo "Using ${uuid} to find dispatched workflow..."
     response_file="${api_calls_dir}/get_actions_run_response.json"
-    job_urls=($(jq '.workflow_runs[]| select(.event=="repository_dispatch")| .jobs_url' -r "${response_file}"| xargs))
+    read -r -d '' -a job_urls < <(jq '.workflow_runs[]| select(.event=="repository_dispatch")| .jobs_url' -r "${response_file}"| xargs)
     if [ "${job_urls+empty}" == "empty" ]
     then
         echo "Did not find jobs, trying again."
